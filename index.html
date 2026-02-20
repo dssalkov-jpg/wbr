@@ -1,769 +1,732 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!doctype html>
+<html lang="ru">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2575.6">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AUTODOC | WBR (HTML mock)</title>
+  <style>
+    :root{
+      --bg:#f6f7f8;
+      --panel:#ffffff;
+      --line:#e7e7ea;
+      --text:#1f2328;
+      --muted:#6b7280;
+      --orange:#f57c00;
+      --shadow: 0 6px 18px rgba(0,0,0,.06);
+      --radius:18px;
+      --radius2:12px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--font);
+      color:var(--text);
+      background:var(--bg);
+    }
+
+    /* Top app bar */
+    .topbar{
+      position:sticky; top:0; z-index:5;
+      height:56px;
+      background:var(--panel);
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      padding:0 16px;
+      gap:12px;
+    }
+    .crumb{font-weight:700; letter-spacing:.2px;}
+    .crumb .dot{color:var(--orange)}
+    .top-actions{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:var(--muted);
+      font-size:13px;
+      white-space:nowrap;
+    }
+    .pill{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+    }
+
+    /* App layout */
+    .app{
+      display:grid;
+      grid-template-columns: 240px 320px 1fr;
+      gap:14px;
+      padding:14px;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+
+    .panel{
+      background:var(--panel);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    /* Left pages */
+    .pages{
+      padding:10px;
+      overflow:hidden;
+    }
+    .pages h4{
+      margin:10px 10px 8px;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+    }
+    .nav{
+      display:flex;
+      flex-direction:column;
+      gap:4px;
+      padding:4px;
+    }
+    .nav a{
+      text-decoration:none;
+      color:var(--text);
+      padding:10px 10px;
+      border-radius:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:14px;
+    }
+    .nav a.active{
+      background:#fff3e6;
+      border:1px solid #ffe1c2;
+    }
+    .nav a .bullet{
+      width:10px; height:10px;
+      border-radius:3px;
+      background:var(--line);
+    }
+    .nav a.active .bullet{ background:var(--orange); }
+
+    /* Filters */
+    .filters{
+      padding:12px;
+    }
+    .filters .title{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      padding:10px 10px 6px;
+    }
+    .filters .title .h{
+      font-weight:800;
+      font-size:14px;
+    }
+    .filters .title .sub{
+      font-size:12px; color:var(--muted);
+    }
+    .filters .selected{
+      padding:0 10px 10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .field{
+      padding:8px 10px;
+      border-top:1px solid var(--line);
+    }
+    .label{
+      font-size:11px;
+      color:var(--muted);
+      margin-bottom:6px;
+    }
+    .control{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:10px 10px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:13px;
+      background:#fff;
+    }
+    .caret{
+      width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #9aa0a6;
+    }
+    .row2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+
+    /* Main content */
+    .main{
+      padding:12px;
+    }
+
+    .tabs{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      padding:8px;
+    }
+    .tab{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-weight:700;
+      font-size:13px;
+      color:var(--muted);
+    }
+    .tab.active{
+      color:var(--text);
+      background:#f7f7f8;
+      border-color:#e2e2e6;
+    }
+    .tabs .right{
+      margin-left:auto;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .kpis{
+      display:grid;
+      grid-template-columns: repeat(7, minmax(140px, 1fr));
+      gap:10px;
+      padding:6px 8px 12px;
+      overflow:auto;
+    }
+    .kpi{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:10px 12px;
+      min-width:140px;
+    }
+    .kpi .t{
+      font-size:11px; color:var(--muted);
+      display:flex; align-items:center; gap:8px;
+    }
+    .kpi .v{
+      margin-top:6px;
+      font-size:18px;
+      font-weight:900;
+      letter-spacing:.2px;
+    }
+    .kpi .hint{
+      margin-top:4px;
+      font-size:11px;
+      color:var(--muted);
+    }
+
+    .charts{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(220px, 1fr));
+      gap:10px;
+      padding: 0 8px 12px;
+    }
+    .chart{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      padding:10px 12px 12px;
+      min-height:170px;
+      position:relative;
+    }
+    .chart .h{
+      font-weight:800;
+      font-size:12px;
+      color:var(--muted);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    .legend{
+      display:flex; gap:10px; align-items:center;
+      font-size:11px; color:var(--muted);
+    }
+    .dot{
+      width:8px; height:8px; border-radius:999px; display:inline-block;
+      background:#c9ccd3;
+    }
+    .dot.orange{ background:var(--orange); }
+    .spark{
+      width:100%;
+      height:120px;
+      border-radius:12px;
+      background:linear-gradient(180deg,#fafafa,#fff);
+      border:1px dashed #e7e7ea;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#9aa0a6;
+      font-size:12px;
+      position:relative;
+      overflow:hidden;
+    }
+    .spark svg{
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      opacity:.95;
+    }
+
+    .tableWrap{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:16px;
+      margin: 0 8px 8px;
+      overflow:hidden;
+    }
+    .tableTop{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-bottom:1px solid var(--line);
+      background:#fbfbfc;
+    }
+    .toggle{
+      display:flex;
+      gap:6px;
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:999px;
+      padding:4px;
+    }
+    .toggle button{
+      border:0;
+      background:transparent;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      color:var(--muted);
+      cursor:pointer;
+    }
+    .toggle button.active{
+      background:#f2f2f4;
+      color:var(--text);
+      font-weight:700;
+    }
+
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      font-size:12px;
+    }
+    thead th{
+      text-align:left;
+      color:var(--muted);
+      font-weight:800;
+      padding:10px 12px;
+      border-bottom:1px solid var(--line);
+      background:#fff;
+      position:sticky;
+      top:0;
+      z-index:1;
+    }
+    tbody td{
+      padding:10px 12px;
+      border-bottom:1px solid #f0f0f2;
+      white-space:nowrap;
+    }
+    tbody tr:hover{ background:#fafafa; }
+    .num{ text-align:right; font-variant-numeric: tabular-nums; }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:#fff3e6;
+      border:1px solid #ffe1c2;
+      color:#8a4b00;
+      font-weight:700;
+      font-size:11px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px){
+      .app{ grid-template-columns: 220px 300px 1fr; }
+      .charts{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+    }
+    @media (max-width: 900px){
+      .app{ grid-template-columns: 1fr; }
+      .pages, .filters{ position:relative; }
+      .kpis{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }
+      .charts{ grid-template-columns: 1fr; }
+    }
   </style>
 </head>
+
 <body>
-<p class="p1">&lt;!doctype html&gt;</p>
-<p class="p1">&lt;html lang="ru"&gt;</p>
-<p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="utf-8" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width,initial-scale=1" /&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;AUTODOC | WBR (HTML mock)&lt;/title&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>:root{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--bg:#f6f7f8;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--panel:#ffffff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--line:#e7e7ea;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--text:#1f2328;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--muted:#6b7280;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--orange:#f57c00;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--shadow: 0 6px 18px rgba(0,0,0,.06);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--radius:18px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--radius2:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>--font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>*{box-sizing:border-box}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin:0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-family:var(--font);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:var(--bg);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Top app bar */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.topbar{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position:sticky; top:0; z-index:5;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height:56px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:var(--panel);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:0 16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.crumb{font-weight:700; letter-spacing:.2px;}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.crumb .dot{color:var(--orange)}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.top-actions{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-left:auto;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:13px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>white-space:nowrap;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.pill{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:6px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:999px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* App layout */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.app{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: 240px 320px 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:14px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:14px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>max-width: 1600px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.panel{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:var(--panel);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:var(--radius);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>box-shadow:var(--shadow);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Left pages */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.pages{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow:hidden;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.pages h4{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin:10px 10px 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-transform:uppercase;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing:.08em;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>flex-direction:column;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:4px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav a{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-decoration:none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav a.active{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff3e6;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid #ffe1c2;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav a .bullet{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width:10px; height:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:3px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.nav a.active .bullet{ background:var(--orange); }</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Filters */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.filters{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.filters .title{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:flex-end;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content:space-between;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 10px 6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.filters .title .h{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:14px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.filters .title .sub{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px; color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.filters .selected{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:0 10px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.field{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:8px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-top:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.label{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:11px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom:6px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.control{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content:space-between;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:13px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.caret{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:6px solid #9aa0a6;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.row2{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: 1fr 1fr;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Main content */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.main{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tabs{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:8px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tab{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 14px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:999px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:13px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tab.active{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#f7f7f8;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-color:#e2e2e6;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tabs .right{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-left:auto;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.kpis{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: repeat(7, minmax(140px, 1fr));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:6px 8px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow:auto;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.kpi{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-width:140px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.kpi .t{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:11px; color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex; align-items:center; gap:8px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.kpi .v{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top:6px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:18px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:900;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>letter-spacing:.2px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.kpi .hint{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-top:4px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:11px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.charts{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:grid;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>grid-template-columns: repeat(4, minmax(220px, 1fr));</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 0 8px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.chart{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>min-height:170px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position:relative;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.chart .h{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content:space-between;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin-bottom:8px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.legend{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex; gap:10px; align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:11px; color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.dot{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width:8px; height:8px; border-radius:999px; display:inline-block;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#c9ccd3;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.dot.orange{ background:var(--orange); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.spark{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width:100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>height:120px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:linear-gradient(180deg,#fafafa,#fff);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px dashed #e7e7ea;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>justify-content:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:#9aa0a6;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position:relative;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow:hidden;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.spark svg{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position:absolute; inset:0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width:100%; height:100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>opacity:.95;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tableWrap{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:16px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 0 8px 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>overflow:hidden;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tableTop{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fbfbfc;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.toggle{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:6px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:999px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:4px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.toggle button{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:transparent;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:6px 10px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:999px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor:pointer;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.toggle button.active{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#f2f2f4;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--text);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:700;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>table{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>width:100%;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-collapse:separate;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-spacing:0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:12px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>thead th{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>text-align:left;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:var(--muted);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:800;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom:1px solid var(--line);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>position:sticky;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>top:0;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>z-index:1;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>tbody td{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-bottom:1px solid #f0f0f2;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>white-space:nowrap;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>tbody tr:hover{ background:#fafafa; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.num{ text-align:right; font-variant-numeric: tabular-nums; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.badge{</p>
-<p class="p1"><span class="Apple-converted-space">      </span>display:inline-flex;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>align-items:center;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>gap:6px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding:4px 8px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius:999px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background:#fff3e6;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid #ffe1c2;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>color:#8a4b00;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-weight:700;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>font-size:11px;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>/* Responsive */</p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width: 1200px){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.app{ grid-template-columns: 220px 300px 1fr; }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.charts{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width: 900px){</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.app{ grid-template-columns: 1fr; }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.pages, .filters{ position:relative; }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.kpis{ grid-template-columns: repeat(2, minmax(160px, 1fr)); }</p>
-<p class="p1"><span class="Apple-converted-space">      </span>.charts{ grid-template-columns: 1fr; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
-<p class="p1">&lt;/head&gt;</p>
-<p class="p2"><br></p>
-<p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="topbar"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="crumb"&gt;&lt;span class="dot"&gt;+&lt;/span&gt; AUTODOC &lt;span style="color:var(--muted)"&gt;|&lt;/span&gt; WBR&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="top-actions"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="pill"&gt;Last refreshed: 17.02.2026 10:30:16&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;span class="pill"&gt;⋯&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="app"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Pages --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;aside class="panel pages"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;h4&gt;Страницы&lt;/h4&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;nav class="nav"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a class="active" href="#"&gt;&lt;span class="bullet"&gt;&lt;/span&gt; Overview&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="#"&gt;&lt;span class="bullet"&gt;&lt;/span&gt; YtD&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="#"&gt;&lt;span class="bullet"&gt;&lt;/span&gt; YtD Article+Brand+Gen…&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="#"&gt;&lt;span class="bullet"&gt;&lt;/span&gt; Time Series&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;a href="#"&gt;&lt;span class="bullet"&gt;&lt;/span&gt; Previous years&lt;/a&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/nav&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/aside&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Filters --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;aside class="panel filters"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="title"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="h"&gt;Weekly Business Review &lt;span style="color:var(--orange)"&gt;YtD&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="sub"&gt;Selected week:&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="selected"&gt;—&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Week&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Month&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;1&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Year&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;2025&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt; &lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;2026&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;Generic&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Brake discs and pads set (3405)&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;Dept., category, subcategory&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;CM group&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Team&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;Art no&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;Brand&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Is PB&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Brand Classification&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;&amp; type&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Supplier, group&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;&amp; Is disabled&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;Country, group&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;Business unit, platform&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="label"&gt;PB ClusterId&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Promo&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Purchase type&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="field"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="row2"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;Suppl's PB&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="label"&gt;PB active generic&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="control"&gt;&lt;span&gt;Все&lt;/span&gt;&lt;span class="caret"&gt;&lt;/span&gt;&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/aside&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;!-- Main --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;main class="panel main"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;div class="tabs"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tab active"&gt;Overview&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tab"&gt;YtD&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tab"&gt;YtD Article+Brand+Generic&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tab"&gt;Time Series&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tab"&gt;Previous years&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="right"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="pill"&gt;Before&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;span class="pill"&gt;After&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- KPI row --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;section class="kpis"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;Product revenue&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;€ 133 480&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;PM&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;€ 51 723&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;PM%&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;38,7%&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;Units sold&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;1 864&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;ASP&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;€ 71,6&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;PM per unit&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;€ 27,75&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="kpi"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="t"&gt;% Refunds&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="v"&gt;21,9%&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="hint"&gt;—&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Charts --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;section class="charts"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="chart"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="h"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;Product revenue by weeks&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="legend"&gt;&lt;span class="dot"&gt;&lt;/span&gt;2025 &lt;span class="dot orange"&gt;&lt;/span&gt;2026&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="spark"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,28 L20,20 L40,18 L60,16 L80,15 L100,14" fill="none" stroke="#c9ccd3" stroke-width="1.8"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,30 L20,17 L40,13 L60,12 L80,11 L100,10" fill="none" stroke="#f57c00" stroke-width="2.2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>(chart placeholder)</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="chart"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="h"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;PM%&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="legend"&gt;&lt;span class="dot"&gt;&lt;/span&gt;2025 &lt;span class="dot orange"&gt;&lt;/span&gt;2026&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="spark"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,16 L20,17 L40,16 L60,17 L80,16 L100,20" fill="none" stroke="#c9ccd3" stroke-width="1.8"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,15 L20,16 L40,14 L60,15 L80,14 L100,19" fill="none" stroke="#f57c00" stroke-width="2.2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>(chart placeholder)</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="chart"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="h"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;COGS&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="legend"&gt;&lt;span class="dot"&gt;&lt;/span&gt;2025 &lt;span class="dot orange"&gt;&lt;/span&gt;2026&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="spark"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,30 L20,22 L40,18 L60,14 L80,13 L100,12" fill="none" stroke="#c9ccd3" stroke-width="1.8"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,32 L20,24 L40,16 L60,14 L80,13 L100,11" fill="none" stroke="#f57c00" stroke-width="2.2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>(chart placeholder)</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="chart"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="h"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span&gt;ASP&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="legend"&gt;&lt;span class="dot"&gt;&lt;/span&gt;2025 &lt;span class="dot orange"&gt;&lt;/span&gt;2026&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="spark"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,20 L20,18 L40,19 L60,17 L80,15 L100,16" fill="none" stroke="#c9ccd3" stroke-width="1.8"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;path d="M0,22 L20,19 L40,20 L60,21 L80,22 L100,23" fill="none" stroke="#f57c00" stroke-width="2.2"/&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/svg&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>(chart placeholder)</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/section&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;!-- Table --&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;section class="tableWrap"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="tableTop"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="toggle" role="tablist" aria-label="mode"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="active" type="button"&gt;Actual&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button type="button"&gt;Forecast&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;button type="button"&gt;Budget&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;div style="margin-left:auto; display:flex; gap:8px; align-items:center;"&gt;</p>
-<p class="p1">&lt;span class="pill"&gt;is BoF&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="pill"&gt;Department&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="pill"&gt;Category&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="pill"&gt;Subcategory&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="pill"&gt;Generic&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;span class="pill"&gt;Team&lt;/span&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;div style="max-height:320px; overflow:auto;"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;table&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;thead&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th&gt;Subcategory&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Product revenue&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;COGS&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Product Profit&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;PM %&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;COGS/unit&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Units&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;SKU qty&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;ASP&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Profit per unit&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Rev. YoY%&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;PM YoY%&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Units YoY%&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;ASP YoY%&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;COGS/unit YoY%&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Profit per unit YoY%&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;Refunds %&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;th class="num"&gt;PB Revenue Share&lt;/th&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/thead&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;tbody&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;&lt;span class="badge"&gt;Brake Kit&lt;/span&gt;&lt;/td&gt;</p>
-<p class="p1">&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td&gt;Brake kit BoF&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;€ 133 480&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;€ 81 757&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;€ 51 723&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;38,7%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;€ 43,86&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;1 864&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;638&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;€ 71,6&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;€ 27,75&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;20,8%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;+1,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;30%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;-7,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;-8,96%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;-4,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;21,9%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;td class="num"&gt;5,8%&lt;/td&gt;</p>
-<p class="p1">&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 133 480&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 81 757&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 51 723&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;38,7%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 43,86&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;1 864&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;638&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 71,6&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 27,75&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;20,8%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;+1,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;30%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;-7,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;-8,96%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;-4,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;21,9%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;5,8%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td&gt;Вcero&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 133 480&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 81 757&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 51 723&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;38,7%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 43,86&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;1 864&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;638&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 71,6&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;€ 27,75&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;20,8%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;+1,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;30%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;-7,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;-8,96%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;-4,2%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;21,9%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">                </span>&lt;td class="num"&gt;5,8%&lt;/td&gt;</p>
-<p class="p1"><span class="Apple-converted-space">              </span>&lt;/tr&gt;</p>
-<p class="p1"><span class="Apple-converted-space">            </span>&lt;/tbody&gt;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>&lt;/table&gt;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>&lt;/section&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;/main&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p1">&lt;/body&gt;</p>
-<p class="p1">&lt;/html&gt;</p>
+  <div class="topbar">
+    <div class="crumb"><span class="dot">+</span> AUTODOC <span style="color:var(--muted)">|</span> WBR</div>
+    <div class="top-actions">
+      <span class="pill">Last refreshed: 17.02.2026 10:30:16</span>
+      <span class="pill">⋯</span>
+    </div>
+  </div>
+
+  <div class="app">
+    <!-- Pages -->
+    <aside class="panel pages">
+      <h4>Страницы</h4>
+      <nav class="nav">
+        <a class="active" href="#"><span class="bullet"></span> Overview</a>
+        <a href="#"><span class="bullet"></span> YtD</a>
+        <a href="#"><span class="bullet"></span> YtD Article+Brand+Gen…</a>
+        <a href="#"><span class="bullet"></span> Time Series</a>
+        <a href="#"><span class="bullet"></span> Previous years</a>
+      </nav>
+    </aside>
+
+    <!-- Filters -->
+    <aside class="panel filters">
+      <div class="title">
+        <div>
+          <div class="h">Weekly Business Review <span style="color:var(--orange)">YtD</span></div>
+          <div class="sub">Selected week:</div>
+        </div>
+      </div>
+      <div class="selected">—</div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">Week</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label">Month</div>
+            <div class="control"><span>1</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">Year</div>
+            <div class="control"><span>2025</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label"> </div>
+            <div class="control"><span>2026</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">Generic</div>
+        <div class="control"><span>Brake discs and pads set (3405)</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="label">Dept., category, subcategory</div>
+        <div class="control"><span>Все</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">CM group</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label">Team</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">Art no</div>
+        <div class="control"><span>Все</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="label">Brand</div>
+        <div class="control"><span>Is PB</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">Brand Classification</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label">& type</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">Supplier, group</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label">& Is disabled</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="label">Country, group</div>
+        <div class="control"><span>Все</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="label">Business unit, platform</div>
+        <div class="control"><span>Все</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="label">PB ClusterId</div>
+        <div class="control"><span>Все</span><span class="caret"></span></div>
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">Promo</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label">Purchase type</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <div class="label">Suppl's PB</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+          <div>
+            <div class="label">PB active generic</div>
+            <div class="control"><span>Все</span><span class="caret"></span></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main -->
+    <main class="panel main">
+      <div class="tabs">
+        <div class="tab active">Overview</div>
+        <div class="tab">YtD</div>
+        <div class="tab">YtD Article+Brand+Generic</div>
+        <div class="tab">Time Series</div>
+        <div class="tab">Previous years</div>
+        <div class="right">
+          <span class="pill">Before</span>
+          <span class="pill">After</span>
+        </div>
+      </div>
+
+      <!-- KPI row -->
+      <section class="kpis">
+        <div class="kpi">
+          <div class="t">Product revenue</div>
+          <div class="v">€ 133 480</div>
+          <div class="hint">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">PM</div>
+          <div class="v">€ 51 723</div>
+          <div class="hint">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">PM%</div>
+          <div class="v">38,7%</div>
+          <div class="hint">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">Units sold</div>
+          <div class="v">1 864</div>
+          <div class="hint">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">ASP</div>
+          <div class="v">€ 71,6</div>
+          <div class="hint">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">PM per unit</div>
+          <div class="v">€ 27,75</div>
+          <div class="hint">—</div>
+        </div>
+        <div class="kpi">
+          <div class="t">% Refunds</div>
+          <div class="v">21,9%</div>
+          <div class="hint">—</div>
+        </div>
+      </section>
+
+      <!-- Charts -->
+      <section class="charts">
+        <div class="chart">
+          <div class="h">
+            <span>Product revenue by weeks</span>
+            <span class="legend"><span class="dot"></span>2025 <span class="dot orange"></span>2026</span>
+          </div>
+          <div class="spark">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,28 L20,20 L40,18 L60,16 L80,15 L100,14" fill="none" stroke="#c9ccd3" stroke-width="1.8"/>
+              <path d="M0,30 L20,17 L40,13 L60,12 L80,11 L100,10" fill="none" stroke="#f57c00" stroke-width="2.2"/>
+            </svg>
+            (chart placeholder)
+          </div>
+        </div>
+
+        <div class="chart">
+          <div class="h">
+            <span>PM%</span>
+            <span class="legend"><span class="dot"></span>2025 <span class="dot orange"></span>2026</span>
+          </div>
+          <div class="spark">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,16 L20,17 L40,16 L60,17 L80,16 L100,20" fill="none" stroke="#c9ccd3" stroke-width="1.8"/>
+              <path d="M0,15 L20,16 L40,14 L60,15 L80,14 L100,19" fill="none" stroke="#f57c00" stroke-width="2.2"/>
+            </svg>
+            (chart placeholder)
+          </div>
+        </div>
+
+        <div class="chart">
+          <div class="h">
+            <span>COGS</span>
+            <span class="legend"><span class="dot"></span>2025 <span class="dot orange"></span>2026</span>
+          </div>
+          <div class="spark">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,30 L20,22 L40,18 L60,14 L80,13 L100,12" fill="none" stroke="#c9ccd3" stroke-width="1.8"/>
+              <path d="M0,32 L20,24 L40,16 L60,14 L80,13 L100,11" fill="none" stroke="#f57c00" stroke-width="2.2"/>
+            </svg>
+            (chart placeholder)
+          </div>
+        </div>
+
+        <div class="chart">
+          <div class="h">
+            <span>ASP</span>
+            <span class="legend"><span class="dot"></span>2025 <span class="dot orange"></span>2026</span>
+          </div>
+          <div class="spark">
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" aria-hidden="true">
+              <path d="M0,20 L20,18 L40,19 L60,17 L80,15 L100,16" fill="none" stroke="#c9ccd3" stroke-width="1.8"/>
+              <path d="M0,22 L20,19 L40,20 L60,21 L80,22 L100,23" fill="none" stroke="#f57c00" stroke-width="2.2"/>
+            </svg>
+            (chart placeholder)
+          </div>
+        </div>
+      </section>
+
+      <!-- Table -->
+      <section class="tableWrap">
+        <div class="tableTop">
+          <div class="toggle" role="tablist" aria-label="mode">
+            <button class="active" type="button">Actual</button>
+            <button type="button">Forecast</button>
+            <button type="button">Budget</button>
+          </div>
+          <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+            <span class="pill">Department</span>
+            <span class="pill">Category</span>
+            <span class="pill">Subcategory</span>
+            <span class="pill">Generic</span>
+            <span class="pill">Team</span>
+          </div>
+        </div>
+
+        <div style="max-height:320px; overflow:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Subcategory</th>
+                <th class="num">Product revenue</th>
+                <th class="num">COGS</th>
+                <th class="num">Product Profit</th>
+                <th class="num">PM %</th>
+                <th class="num">COGS/unit</th>
+                <th class="num">Units</th>
+                <th class="num">SKU qty</th>
+                <th class="num">ASP</th>
+                <th class="num">Profit per unit</th>
+                <th class="num">Rev. YoY%</th>
+                <th class="num">PM YoY%</th>
+                <th class="num">Units YoY%</th>
+                <th class="num">ASP YoY%</th>
+                <th class="num">COGS/unit YoY%</th>
+                <th class="num">Profit per unit YoY%</th>
+                <th class="num">Refunds %</th>
+                <th class="num">PB Revenue Share</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge">Brake Kit</span></td>
+                <td class="num">€ 133 480</td>
+                <td class="num">€ 81 757</td>
+                <td class="num">€ 51 723</td>
+                <td class="num">38,7%</td>
+                <td class="num">€ 43,86</td>
+                <td class="num">1 864</td>
+                <td class="num">638</td>
+                <td class="num">€ 71,6</td>
+                <td class="num">€ 27,75</td>
+                <td class="num">20,8%</td>
+                <td class="num">+1,2%</td>
+                <td class="num">30%</td>
+                <td class="num">-7,2%</td>
+                <td class="num">-8,96%</td>
+                <td class="num">-4,2%</td>
+                <td class="num">21,9%</td>
+                <td class="num">5,8%</td>
+              </tr>
+              <tr>
+                <td>Вcero</td>
+                <td class="num">€ 133 480</td>
+                <td class="num">€ 81 757</td>
+                <td class="num">€ 51 723</td>
+                <td class="num">38,7%</td>
+                <td class="num">€ 43,86</td>
+                <td class="num">1 864</td>
+                <td class="num">638</td>
+                <td class="num">€ 71,6</td>
+                <td class="num">€ 27,75</td>
+                <td class="num">20,8%</td>
+                <td class="num">+1,2%</td>
+                <td class="num">30%</td>
+                <td class="num">-7,2%</td>
+                <td class="num">-8,96%</td>
+                <td class="num">-4,2%</td>
+                <td class="num">21,9%</td>
+                <td class="num">5,8%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
 </body>
 </html>
